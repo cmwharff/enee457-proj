@@ -1,0 +1,77 @@
+<html>
+<style>
+  body {
+    background-color: khaki;
+  }
+
+  .page {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .uploader {
+    width: 60%;
+  }
+
+  .log {
+    width: 35%;
+  }
+
+  button, input[type="file"]::file-selector-button {
+    background-color: black;
+    color: white;
+    transition: 0.5s;
+  }
+
+  button:hover, input[type="file"]::file-selector-button:hover {
+    background-color: white;
+    color: black;
+  }
+</style>
+
+<body>
+  <div class="page">
+    <div class="uploader">
+      <h2>Upload WAV File</h2>
+      <input type="file" id="fileInput" accept=".wav">
+      <button onclick="sendFile()">Submit</button>
+      <h3>Prediction:</h3>
+      <pre id="output"></pre>
+    </div>
+    <div class="log">
+      <ol id="log">
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    const log = document.getElementById('log');
+    async function sendFile() {
+      const now = new Date();
+      const newItem = document.createElement('li');
+      log.appendChild(newItem);
+
+      let file = document.getElementById("fileInput").files[0];
+
+      let formData = new FormData();
+      formData.append("file", file);
+
+      let response = await fetch("http://localhost:8000/predict", {
+        method: "POST",
+        body: formData
+      });
+
+      let result = await response.json();
+      if (result.prediction == "1") {
+        document.getElementById("output").innerText = "Fake";
+        newItem.textContent = `${now.toUTCString()}: Fake`;
+      } else {
+        document.getElementById("output").innerText = "Real";
+        newItem.textContent = `${now.toUTCString()}: Real`;
+      }
+      console.log("Raw response:", result);
+    }
+  </script>
+</body>
+
+</html>
