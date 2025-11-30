@@ -15,7 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-model = load_model("457model.keras")
+model = load_model("src/457model.keras")
 
 # same settings as training
 SAMPLE_RATE = 22050
@@ -42,4 +42,4 @@ async def predict(file: UploadFile):
     return {"prediction": prediction.tolist()}
     
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
