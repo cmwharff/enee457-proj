@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite && python3 -m uvicorn server:app --reload"
+    "dev": "vite",
+    "serve": "python3 -m uvicorn server:app --reload"
   },
   "devDependencies": {
     "node-addon-api": "^1.6.1",
