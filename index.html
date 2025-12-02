@@ -1,30 +1,37 @@
 <html>
-  <head>
-    <title>My Webpage</title>
-    <link rel="stylesheet" href="src/style.css">
+
+<head>
+  <title>Call Screener</title>
+  <link rel="stylesheet" href="src/style.css">
 </head>
 
 <body>
   <div class="page">
-    <div class="uploader">
-      <h2>Upload WAV File</h2>
+    <div id="uploader">
+      <h1>Call Screener</h1>
+      <h2>Upload WAV File</h2><br>
       <input type="file" id="fileInput" accept=".wav">
       <button onclick="sendFile()">Submit</button>
-      <h3>Prediction:</h3>
-      <pre id="output"></pre>
+      <h3>Prediction: <text id="output"></text></h3>
     </div>
     <div class="log">
-      <ol id="log">
-      </ol>
+      <div class="log-top"><h1>Prediction History</h1></div>
+      <div class="list-container">
+        <ol id="log">
+        </ol>
+      </div>
     </div>
   </div>
 
+  <div class="grid-overlay"></div>
+
   <script>
     const log = document.getElementById('log');
+    const uploader = document.getElementById('uploader');
     async function sendFile() {
       const now = new Date();
       const newItem = document.createElement('li');
-      log.appendChild(newItem);
+      log.prepend(newItem);
 
       let file = document.getElementById("fileInput").files[0];
 
@@ -39,10 +46,14 @@
       let result = await response.json();
       if (result.prediction == "1") {
         document.getElementById("output").innerText = "Fake";
-        newItem.textContent = `${now.toUTCString()}: Fake`;
+        newItem.innerHTML = `<b>Fake</b><br>${now.toUTCString()}`;
+        uploader.classList.remove('real');
+        uploader.classList.add('fake');
       } else {
         document.getElementById("output").innerText = "Real";
-        newItem.textContent = `${now.toUTCString()}: Real`;
+        newItem.innerHTML = `<b>Real</b><br>${now.toUTCString()}`;
+        uploader.classList.remove('fake');
+        uploader.classList.add('real');
       }
       console.log("Raw response:", result);
     }
